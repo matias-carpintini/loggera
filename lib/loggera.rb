@@ -2,20 +2,51 @@ require "loggera/version"
 require "loggera/engine"
 
 module Loggera
-  ActiveSupport::Notifications.subscribe "process_action.action_controller" do |event|
-    event.payload => { exception:, exception_object: }
+  # TODO: 
+  # [ ] Clean this module
+  # [ ] Document methods
 
-    if exception
+  def clean_backtrace(exception)
+    Rails.backtrace_cleaner.send(:filter, exception.backtrace)
+  end
+
+  def backtrace_message(exception)
+    backtrace = exception.backtrace ? clean_backtrace(exception) : nil
+
+    return unless backtrace
+
+    text = []
+
+    text << '```'
+    backtrace.first(3).each { |line| text << "* #{line}" }
+    text << '```'
+
+    text.join("\n")
+  end
+
+  def title(class_name, controller, action)
+    errors_text = class_name =~ /^[aeiou]/i ? 'An' : 'A'
+    controller_and_action = "#{ controller }##{ action }"
+    occurred_in = "occurred in #{ controller_and_action }"
+    
+    return [errors_text, class_name, occurred_in].join(" ")
+  end
+
+  module_function :clean_backtrace, :backtrace_message, :title
+
+  ActiveSupport::Notifications.subscribe "process_action.action_controller" do |event|
+    if event.payload[:exception]
       event.payload => { 
-        controller:, action:, status:, params:, path:, method:, format: 
+        exception:, exception_object:, controller:, action:, status:, 
+        params:, path:, method:, format:
       }
       class_name, message = exception
-      title = "#{ class_name =~ /^[aeiou]/i ? 'An' : 'A' } #{ class_name } occurred in #{ controller }##{ action }"
-      backtrace = exception_object.backtrace.first
+      backtrace = backtrace_message(exception_object)
+      title = title(class_name, controller, action)
       
       Loggera::Error.create!(
         title:, class_name:, message:, backtrace:, status:, 
-        params:, path:, method:, format: 
+        params:, path:, http_method: method, format: 
       )
     end
   end

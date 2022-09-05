@@ -8,7 +8,7 @@ class CreateLoggeraErrors < ActiveRecord::Migration[7.0]
       t.integer :status
       t.string :params
       t.string :path
-      t.string :method
+      t.string :http_method
       t.string :format
 
       t.timestamps

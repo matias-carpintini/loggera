@@ -22,7 +22,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_04_181222) do
     t.integer "status"
     t.string "params"
     t.string "path"
-    t.string "method"
+    t.string "http_method"
     t.string "format"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
