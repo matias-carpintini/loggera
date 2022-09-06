@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Loggera</title>
-  <%= csrf_meta_tags %>
-  <%= csp_meta_tag %>
+  <head>
+    <title>Loggera</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
 
-  <%= stylesheet_link_tag    "loggera/application", media: "all" %>
-</head>
-<body>
+    <%= stylesheet_link_tag "loggera", media: "all" %>
 
-<%= yield %>
-
-</body>
+    <%= javascript_importmap_tags %>
+    <%= javascript_import_module_tag "loggera/application" %>
+  </head>
+  <body>
+    <%= yield %>
+  </body>
 </html>

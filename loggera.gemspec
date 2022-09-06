@@ -19,4 +19,7 @@ Gem::Specification.new do |spec|
   end
 
   spec.add_dependency "rails", ">= 7.0.3.1"
+  spec.add_dependency "pagy", "~> 5.10", ">= 5.10.1"
+  spec.add_dependency "tailwindcss-rails", "~> 2.0", ">= 2.0.13"
+  spec.add_dependency "importmap-rails", "~> 1.1", ">= 1.1.5"
 end
